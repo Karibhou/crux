@@ -11,7 +11,9 @@ Crux is the agent runtime inside [Hive](https://github.com/hivecommons/hive), sp
 | **Tamper-evident** | If prompt injection, a hostile repo or a bad dependency does bend an agent, it leaves a trace and hits a boundary that can refuse it. Nothing happens off the record. | No agent self-report is trusted. Every write passes a boundary that logs it and can refuse it; policy lives outside the model; sandboxed execution; scrubbed logs; signed, scoped credentials that expire. |
 | **Governed** | A human owns the record of what happened and why, and can stop it. | A gate before anything lands, trust levels that decide how much runs unattended, an audit log and telemetry via [pluk](https://github.com/hivecommons/pluk), and evidence a reviewer can check. |
 
-Hive is the first consumer. It has run this runtime in the open on dozens of hives and production repositories: thousands of governed writes a week, every one of them through the proxy, with the refused ones on record. Anything that needs a governed agent can be the next consumer.
+These promises are backed by code, not by a prompt. Hive's [security model](https://github.com/hivecommons/hive/blob/v5/src/docs/security-model.md) is the inventory: 38 controls that protect maintainers from the agents they run, each one tied to a file path, config key or ADR, with a section on [what is not done yet](https://github.com/hivecommons/hive/blob/v5/src/docs/security-model.md#11-what-hive-does-not-do-yet) and [how to audit a running hive](https://github.com/hivecommons/hive/blob/v5/src/docs/security-model.md#12-how-to-audit-a-running-hive). The agent-runtime controls in that list are the ones that move into Crux.
+
+Hive is the first consumer. It has run this runtime in the open on 27 hives and their production repositories (October 2026): 4,349 agent writes to GitHub in one five-day window, every one through the proxy, 7 refused and on record. Anything that needs a governed agent can be the next consumer.
 
 ## Why "Crux"
 
