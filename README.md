@@ -1,34 +1,46 @@
 # Crux
 
-The agent runtime inside [Hive](https://github.com/hivecommons/hive), split out as a reusable component.
+**A fully governed AI agent platform.** Trust, productivity, non-rogue.
 
-Crux runs AI coding agents from definitions: short-lived agents with a clean context, external context injected each run, limits enforced in code at the tool boundary, a gate before anything lands, and an audit log a human owns. Hive is its first consumer; anything that needs a governed agent can be the next.
+Crux is the agent runtime inside [Hive](https://github.com/hivecommons/hive), split out as a reusable open-source component. It runs AI agents from definitions and makes four promises about every one of them:
+
+| Promise | What it means | How Crux keeps it |
+|---|---|---|
+| **Productive** | Agents ship real work on real repos, continuously, without a human babysitting each run. | Short-lived agents with a clean context, external context injected per run, stall and crash-loop recovery, kicks and nudges, seven engines behind one interface. |
+| **Non-rogue** | An agent cannot act outside the scope it was given, even if the model wants to. | Limits enforced in code at the tool boundary: a MITM proxy in front of every write, tool approval, per-agent identity and credentials, container and Kubernetes isolation. |
+| **Not hackable** | Prompt injection, a hostile repo or a bad dependency cannot turn an agent into an attacker. | No agent self-report is trusted. Policy lives outside the model; sandboxed execution; scrubbed logs; signed, scoped credentials that expire. |
+| **Governed** | A human owns the record of what happened and why, and can stop it. | A gate before anything lands, trust levels that decide how much runs unattended, an audit log and telemetry via [pluk](https://github.com/hivecommons/pluk), and evidence a reviewer can check. |
+
+Hive is the first consumer. It has run this runtime in the open on dozens of hives and production repositories: thousands of governed writes a week, every one of them through the proxy, with the refused ones on record. Anything that needs a governed agent can be the next consumer.
+
+## Why "Crux"
+
+It is the crux of the matter. Models are good enough now; the failure mode that matters is an agent doing the wrong thing with the right skills. Crux is the point everything turns on: the layer where trust, productivity and non-rogue behaviour are decided in code, not in a prompt.
 
 ## Status
 
-Placeholder. The code is being carved out of the hive repo in stages, tracked in [hivecommons/hive#13536](https://github.com/hivecommons/hive/issues/13536):
+The code is being carved out of the hive repo in stages, tracked in [hivecommons/hive#13536](https://github.com/hivecommons/hive/issues/13536). Design record: [`src/docs/design/crux.md`](https://github.com/hivecommons/hive/blob/v5/src/docs/design/crux.md) in hive.
 
-1. In-repo boundary inside hive (`crux.Runtime` interface, architecture ratchet, tmux funnel, agent config struct, CI path filters).
-2. Nested Go module in hive with its own tags and a `crux` binary (`run`, `ps`, `logs`, `kick`, `stop`).
-3. `crux serve` with an API, auth and quotas; the code moves here and Hive becomes a client. Multi-tenancy when there is a second tenant.
-
-Design note: `src/docs/design/crux.md` in the hive repo once stage 1 lands.
+1. **In-repo boundary inside hive** (in progress): `crux.Runtime` interface, architecture ratchet test, tmux funnel, agent-runtime config struct, CI path filters.
+2. **Nested Go module** in hive with its own tags and a `crux` binary: `run`, `ps`, `logs`, `kick`, `stop`.
+3. **`crux serve`**: an API, auth and quotas; the code moves here and Hive becomes a client. Multi-tenancy when there is a second tenant.
 
 ## What is in scope
 
 - Run an agent from a definition: engine, model, prompt, tools, limits.
 - Lifecycle: start, observe, nudge, stall and crash-loop recovery, stop.
 - Engines: Claude, Copilot, Gemini, Goose, Codex, Aider, Bob; any OpenAI-compatible model through the gateway.
-- Policy enforcement at the tool boundary (MITM proxy, tool approval).
+- Policy enforcement at the tool boundary: MITM proxy, tool approval.
 - Isolation: container sandbox, Kubernetes job.
-- Telemetry and audit via [pluk](https://github.com/hivecommons/pluk).
+- Identity, credentials, entitlements.
+- Telemetry and audit via pluk.
 
-Out of scope, and staying in Hive: governor, GitHub and forge integration, review, evidence, dashboard, hub.
+Staying in Hive: governor, GitHub and forge integration, review swarm, evidence, dashboard, hub.
 
-## Name
+## What else could run on Crux
 
-Crux: the point everything turns on. Unrelated projects share the word (redbadger/crux, Google CrUX, CRUX Linux); none in this field.
+Any system that wants agents to do work without trusting the agent: an enterprise agent service, a policy proxy in front of a harness you did not write, a model gateway with entitlements, ops and SRE runbooks, documentation upkeep, security response, research pipelines, a local runner on a laptop.
 
 ## License
 
-Apache-2.0.
+Apache-2.0. Open source under Hive Commons; anyone may productize on top.
