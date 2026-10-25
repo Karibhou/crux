@@ -1,4 +1,4 @@
-<!-- Synced from hivecommons/hive src/crux/README.md at 84d7aab1376ab2c9901a166da6c0e4e3cb5ae47b; edit it there. -->
+<!-- Synced from hivecommons/hive src/crux/README.md at 19a239dd7de1cd0afe809a3d5e9674ce54ae50d0; edit it there. -->
 
 # Crux
 
@@ -21,8 +21,10 @@ The design, the boundary rules and the roadmap are in
 | `crux` | the public surface: `crux.Runtime` (`Definitions`, `Lifecycle`, `Observer`, `Kicker`), `crux.Process`, `crux.ProjectContext` |
 | `crux/agent` | the manager: tmux sessions, backends, restarts, kick delivery, the only place a process is touched |
 | `crux/config` | the configuration leaf: `config.AgentConfig` and the other YAML-shaped types, stdlib only |
-| `crux/cli` | the `crux` command: `run`, `ps`, `logs`, `kick`, `stop`, `serve`, and `--server` remote mode |
-| `crux/api`, `crux/serve` | the wire contract of `crux serve` (stdlib-only client and types) and the server |
+| `crux/cli` | the `crux` command: `run`, `ps`, `logs`, `kick`, `stop`, `serve`, `agy-turn` (the pane-side agy subprocess), and `--server` remote mode |
+| `crux/api`, `crux/serve` | the wire contract of `crux serve` (stdlib-only client and types, `api.RuntimeRoutes`: every `crux.Runtime` method → route) and the server |
+| `crux/api/client` | `client.Runtime`: `crux.Runtime` over the API; what `crux/runtime.New` returns for `CRUX_MODE=sidecar` |
+| `crux/api/callback`, `crux/hivecap` | the hive callback contract (capabilities hive serves the runtime: scoped tokens, PRs, Linear, scanners, conditions) and the runtime-side adapters `crux serve --hive-callback` installs |
 | `crux/defs` | the file-based agent-definition loader the module's binary uses |
 | `crux/cmd/crux` | the binary |
 | the rest | observation and policy: `watchdog`, `trajectory`, `logscrub`, `proxy`, `sandbox`, `inference`, … |
