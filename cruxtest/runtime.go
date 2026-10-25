@@ -4,12 +4,12 @@
 package cruxtest
 
 import (
-	"context"
 	"log/slog"
 
 	"github.com/hivecommons/crux"
 	"github.com/hivecommons/crux/agent"
 	"github.com/hivecommons/crux/config"
+	"github.com/hivecommons/crux/pushbroker"
 )
 
 // Runtime adds fixture controls to the production runtime surface. Consumer
@@ -29,9 +29,10 @@ type Runtime interface {
 	SetInferenceCallbacks(setRoute func(name, backend, model string), clearRoute func(name string))
 	SetSandboxConfig(config.AgentSandboxConfig)
 
-	// Login-scanner tests pass the runtime through their credential interface.
-	AgentHasValidCredential(name string) bool
-	RefreshAgentTokenFor(ctx context.Context, name string) error
+	// Boot tests read back the sandbox wiring they installed and inject
+	// sandbox audit rows.
+	SandboxGitHubWiring() (crux.PRCreator, pushbroker.TokenMinter)
+	SandboxAuditForTest(agent, action, detail string)
 }
 
 // Option configures a test runtime's construction.
