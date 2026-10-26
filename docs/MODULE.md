@@ -1,4 +1,4 @@
-<!-- Synced from hivecommons/hive src/crux/README.md at 60f1d80846f8ce52e9aec40c823e58b38fa2e319; edit it there. -->
+<!-- Synced from hivecommons/hive src/crux/README.md at 4356068909f53bbeb435297ca449cf59d297e91e; edit it there. -->
 
 # Crux
 
