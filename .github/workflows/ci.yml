@@ -210,6 +210,22 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: bash .github/scripts/check-action-pins.sh .github/workflows
 
+  file-size-ratchet:
+    # crux#20: no non-test .go file may grow past its line count in
+    # .github/go-file-size-ratchet.txt, and no unlisted one may exceed 800
+    # lines. Shrinking always passes and prints the baseline line to edit.
+    name: Go file-size ratchet
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Ratchet self-test
+        run: bash .github/scripts/test-file-size-ratchet.sh
+      - name: Check non-test Go file sizes against the baseline
+        run: bash .github/scripts/check-file-size-ratchet.sh
+
   smoke:
     name: smoke crux serve (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
