@@ -1,4 +1,4 @@
-<!-- Synced from hivecommons/hive src/crux/README.md at 354ea46eed15839e5288c1f9f4ae15b1911732dd; edit it there. -->
+<!-- Synced from hivecommons/hive src/crux/README.md at 7a506f71be342f45185d5ee03168ac74a76345de; edit it there. -->
 
 # Crux
 
@@ -11,8 +11,8 @@ its own: this directory is the Go module `github.com/hivecommons/crux`
 and depends on nothing else in the Hive repository.
 
 The design, the boundary rules and the roadmap are in
-[`src/docs/design/crux.md`](https://github.com/hivecommons/hive/blob/354ea46eed15839e5288c1f9f4ae15b1911732dd/src/docs/design/crux.md); the operator pages are
-[`crux-cli.md`](https://github.com/hivecommons/hive/blob/354ea46eed15839e5288c1f9f4ae15b1911732dd/src/docs/crux-cli.md) and [`crux-serve.md`](https://github.com/hivecommons/hive/blob/354ea46eed15839e5288c1f9f4ae15b1911732dd/src/docs/crux-serve.md).
+[`src/docs/design/crux.md`](https://github.com/hivecommons/hive/blob/7a506f71be342f45185d5ee03168ac74a76345de/src/docs/design/crux.md); the operator pages are
+[`crux-cli.md`](https://github.com/hivecommons/hive/blob/7a506f71be342f45185d5ee03168ac74a76345de/src/docs/crux-cli.md) and [`crux-serve.md`](https://github.com/hivecommons/hive/blob/7a506f71be342f45185d5ee03168ac74a76345de/src/docs/crux-serve.md).
 
 ## What is in the module
 
@@ -101,7 +101,7 @@ crux serve --listen 127.0.0.1:7777 --token "$T" # TCP too; loopback only, token 
 agents, run from a definition, logs (pane, buffer, full, or followed as
 server-sent events), kick, stop, health, and an event stream of starts,
 stops, kicks and state changes. The contract is `crux/api`, which also has
-a Go client (`api.NewClient`). [`crux-serve.md`](https://github.com/hivecommons/hive/blob/354ea46eed15839e5288c1f9f4ae15b1911732dd/src/docs/crux-serve.md)
+a Go client (`api.NewClient`). [`crux-serve.md`](https://github.com/hivecommons/hive/blob/7a506f71be342f45185d5ee03168ac74a76345de/src/docs/crux-serve.md)
 has the routes.
 
 ## Remote mode
