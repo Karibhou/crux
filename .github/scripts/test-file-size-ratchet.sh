@@ -136,6 +136,14 @@ printf '900 big/big.go\n' >"$case_dir/other-baseline.txt"
 run other-baseline.txt
 assert_exit 0 "$rc" "baseline argument is honoured"
 
+echo "case: zero-byte baseline"
+new_case empty-baseline
+gofile "$case_dir/pkg/new.go" 801
+: >"$case_dir/.github/go-file-size-ratchet.txt"
+run
+assert_exit 1 "$rc" "an empty baseline grandfathers nothing"
+assert_contains "$out" "pkg/new.go has 801 lines, over the 800-line limit" "first file is judged, not read as a baseline entry"
+
 echo "case: missing baseline"
 new_case missing
 run does-not-exist.txt

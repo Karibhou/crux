@@ -51,11 +51,13 @@ current="$(
     done
 )"
 
-# First input is the baseline, second the current counts. Errors and notices
-# are GitHub annotations, so they also show on the PR diff in CI.
+# First input is the baseline, second the current counts. Match on FILENAME,
+# not FNR == NR: with a zero-byte baseline NR never advances during it, and the
+# first current file would be read as a baseline entry and grandfathered.
+# Errors and notices are GitHub annotations, so they also show on the PR diff.
 status=0
 awk -v limit="$LIMIT" -v baseline="$BASELINE" '
-  FNR == NR {
+  FILENAME == baseline {
     if ($0 ~ /^[[:space:]]*(#|$)/) next
     base[$2] = $1
     next
