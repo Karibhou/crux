@@ -1,4 +1,4 @@
-<!-- Synced from hivecommons/hive src/crux/README.md at ba848b9cdb9d2b24e89c9edbc506c4fe515e6710; edit it there. -->
+<!-- Synced from hivecommons/hive src/crux/README.md at 6aa5b198066f4d1cb4228969f49398c1dcab41ca; edit it there. -->
 
 # Crux
 
@@ -11,8 +11,8 @@ its own: this directory is the Go module `github.com/hivecommons/crux`
 and depends on nothing else in the Hive repository.
 
 The design, the boundary rules and the roadmap are in
-[`src/docs/design/crux.md`](https://github.com/hivecommons/hive/blob/ba848b9cdb9d2b24e89c9edbc506c4fe515e6710/src/docs/design/crux.md); the operator pages are
-[`crux-cli.md`](https://github.com/hivecommons/hive/blob/ba848b9cdb9d2b24e89c9edbc506c4fe515e6710/src/docs/crux-cli.md) and [`crux-serve.md`](https://github.com/hivecommons/hive/blob/ba848b9cdb9d2b24e89c9edbc506c4fe515e6710/src/docs/crux-serve.md).
+[`src/docs/design/crux.md`](https://github.com/hivecommons/hive/blob/6aa5b198066f4d1cb4228969f49398c1dcab41ca/src/docs/design/crux.md); the operator pages are
+[`crux-cli.md`](https://github.com/hivecommons/hive/blob/6aa5b198066f4d1cb4228969f49398c1dcab41ca/src/docs/crux-cli.md) and [`crux-serve.md`](https://github.com/hivecommons/hive/blob/6aa5b198066f4d1cb4228969f49398c1dcab41ca/src/docs/crux-serve.md).
 
 ## What is in the module
 
@@ -101,7 +101,7 @@ crux serve --listen 127.0.0.1:7777 --token "$T" # TCP too; loopback only, token 
 agents, run from a definition, logs (pane, buffer, full, or followed as
 server-sent events), kick, stop, health, and an event stream of starts,
 stops, kicks and state changes. The contract is `crux/api`, which also has
-a Go client (`api.NewClient`). [`crux-serve.md`](https://github.com/hivecommons/hive/blob/ba848b9cdb9d2b24e89c9edbc506c4fe515e6710/src/docs/crux-serve.md)
+a Go client (`api.NewClient`). [`crux-serve.md`](https://github.com/hivecommons/hive/blob/6aa5b198066f4d1cb4228969f49398c1dcab41ca/src/docs/crux-serve.md)
 has the routes.
 
 ## Remote mode
@@ -129,7 +129,7 @@ only when the standard `OTEL_EXPORTER_OTLP_ENDPOINT` (or a per-signal
 is set; with none set nothing is installed and nothing is sent. There is no
 `/metrics` endpoint: point crux at an OpenTelemetry Collector and export from
 there. Variables and instruments are listed in
-[`crux-cli.md`](https://github.com/hivecommons/hive/blob/ba848b9cdb9d2b24e89c9edbc506c4fe515e6710/src/docs/crux-cli.md#telemetry).
+[`crux-cli.md`](https://github.com/hivecommons/hive/blob/6aa5b198066f4d1cb4228969f49398c1dcab41ca/src/docs/crux-cli.md#telemetry).
 
 ## Using Crux from Go
 
