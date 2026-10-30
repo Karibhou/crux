@@ -26,13 +26,56 @@ func (e *Env) subFlags(name string) *flag.FlagSet {
 // parseSub parses args and maps the flag package's outcomes onto exit codes;
 // ok is false when the caller should return code.
 func parseSub(fs *flag.FlagSet, args []string) (code int, ok bool) {
-	if err := fs.Parse(args); err != nil {
+	if err := fs.Parse(flagsFirst(fs, args)); err != nil {
 		if errors.Is(err, flag.ErrHelp) {
 			return ExitOK, false
 		}
 		return ExitUsage, false
 	}
 	return ExitOK, true
+}
+
+// flagsFirst moves flags registered on fs (and their values) ahead of
+// positional arguments so `crux logs scout -n 50` parses like
+// `crux logs -n 50 scout`; the flag package otherwise stops at the first
+// positional. Dash-prefixed tokens fs does not define stay where they are, so
+// free-text tails such as a kick message keep their words, and everything
+// after "--" stays positional.
+func flagsFirst(fs *flag.FlagSet, args []string) []string {
+	var flags, pos []string
+	for i := 0; i < len(args); i++ {
+		a := args[i]
+		if a == "--" {
+			pos = append(pos, args[i:]...)
+			break
+		}
+		if len(a) < 2 || a[0] != '-' {
+			pos = append(pos, a)
+			continue
+		}
+		name := strings.TrimLeft(a, "-")
+		hasValue := strings.Contains(name, "=")
+		if hasValue {
+			name = name[:strings.Index(name, "=")]
+		}
+		f := fs.Lookup(name)
+		if f == nil {
+			pos = append(pos, a)
+			continue
+		}
+		flags = append(flags, a)
+		if hasValue {
+			continue
+		}
+		if b, isBool := f.Value.(interface{ IsBoolFlag() bool }); isBool && b.IsBoolFlag() {
+			continue
+		}
+		if i+1 < len(args) {
+			i++
+			flags = append(flags, args[i])
+		}
+	}
+	return append(flags, pos...)
 }
 
 // cmdRun is `crux run`: Definitions.AddAgent (for a definition file) and
