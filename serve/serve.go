@@ -27,7 +27,6 @@ import (
 	"path/filepath"
 	"regexp"
 	"sort"
-	"strconv"
 	"strings"
 	"sync"
 	"syscall"
@@ -42,6 +41,8 @@ const (
 	// DefaultPollInterval is how often followed logs and the state watcher
 	// re-read the runtime.
 	DefaultPollInterval = time.Second
+	// followWindow is how many ring-buffer lines each follow poll asks for.
+	followWindow = 200
 	// maxRequestBody bounds a JSON request body; a definition is a few KB.
 	maxRequestBody = 1 << 20
 	// subscriberBuffer is how many events a slow subscriber can lag before
@@ -460,47 +461,6 @@ func (s *Server) handleGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	s.writeJSON(w, http.StatusOK, toWire(p))
-}
-
-func (s *Server) handleLogs(w http.ResponseWriter, r *http.Request) {
-	name := s.Runtime.ResolveAgent(r.PathValue("name"))
-	q := r.URL.Query()
-	lines := api.DefaultLogLines
-	if v := q.Get(api.QueryLines); v != "" {
-		n, err := strconv.Atoi(v)
-		if err != nil || n < 0 {
-			s.writeError(w, http.StatusBadRequest, api.CodeBadRequest, api.QueryLines+" must be a non-negative integer")
-			return
-		}
-		lines = n
-	}
-	if isTrue(q.Get(api.QueryFollow)) {
-		s.followLogs(w, r, name)
-		return
-	}
-	source := q.Get(api.QuerySource)
-	if source == "" {
-		source = api.LogSourcePane
-	}
-	out := api.Logs{Agent: name, Source: source}
-	var err error
-	switch source {
-	case api.LogSourcePane:
-		out.Lines, err = s.Runtime.GetOutput(name, lines)
-	case api.LogSourceBuffer:
-		out.Lines, err = s.Runtime.GetBufferOutput(name, lines)
-	case api.LogSourceFull:
-		out.Header = s.Runtime.FullLogHeader(name)
-		out.Content, err = s.Runtime.CaptureFullLog(name)
-	default:
-		s.writeError(w, http.StatusBadRequest, api.CodeBadRequest, fmt.Sprintf("%s must be %s, %s or %s", api.QuerySource, api.LogSourcePane, api.LogSourceBuffer, api.LogSourceFull))
-		return
-	}
-	if err != nil {
-		s.writeError(w, http.StatusInternalServerError, api.CodeRuntime, fmt.Sprintf("logs %s: %v", name, err))
-		return
-	}
-	s.writeJSON(w, http.StatusOK, out)
 }
 
 func (s *Server) handleKick(w http.ResponseWriter, r *http.Request) {
