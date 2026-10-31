@@ -32,8 +32,11 @@ jobs:
           # definition not the sync. Keep an allowlist anyway for a future
           # PR-based sync actor. Quote the patterns: unquoted, [bot] is a
           # bracket expression that matches one of b/o/t, not the literal.
+          # Only the sync actor belongs here: hivecommons-hive[bot] is the
+          # hive agent App and opens ordinary code PRs. Exempting it let #71
+          # merge sync-owned files that the next sync then erased (#72).
           case "$ACTOR" in
-            "hive-release[bot]"|"hivecommons-hive[bot]") echo "sync actor $ACTOR; skipping"; exit 0 ;;
+            "hive-release[bot]") echo "sync actor $ACTOR; skipping"; exit 0 ;;
           esac
           files="$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${PR}/files" --paginate --jq '.[].filename')"
           # Allowlist mirroring KEEP in hive's src/scripts/crux-publish.sh: anything
