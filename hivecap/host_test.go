@@ -127,9 +127,7 @@ func TestInferenceRoutesPushAndClear(t *testing.T) {
 			}
 			r.Clear("a")
 			waitFor(t, "route cleared", func() bool { _, ok := h.route("a"); return !ok })
-			// The host sees the clear before the worker re-takes r.mu to
-			// acknowledge it, so wait for the desired entry to drop too.
-			waitFor(t, "acknowledged clear to drop the desired entry", func() bool {
+			waitFor(t, "desired entry dropped", func() bool {
 				r.mu.Lock()
 				defer r.mu.Unlock()
 				_, kept := r.desired["a"]
