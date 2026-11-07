@@ -38,6 +38,7 @@ import (
 	"github.com/hivecommons/crux/checkout"
 	"github.com/hivecommons/crux/config"
 	"github.com/hivecommons/crux/lanes"
+	"github.com/hivecommons/crux/runs"
 )
 
 const (
@@ -109,6 +110,10 @@ type Server struct {
 	// (api.PathCheckouts); nil answers those routes 501.
 	Checkouts *checkout.Service
 
+	// Runs, when set, serves the contained-run family (RFC crux#114 S2 +
+	// S7); nil answers those routes with not_supported.
+	Runs *runs.Service
+
 	now     func() time.Time
 	started time.Time
 
@@ -166,6 +171,7 @@ func (s *Server) Handler() http.Handler {
 	mux.HandleFunc("GET "+api.PathEvents, s.handleEvents)
 	s.registerFamilies(mux)
 	s.registerCheckouts(mux)
+	s.registerRuns(mux)
 	return s.laneHandler(s.authenticate(mux))
 }
 
