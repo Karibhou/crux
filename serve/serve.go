@@ -37,6 +37,7 @@ import (
 	"github.com/hivecommons/crux/api"
 	"github.com/hivecommons/crux/checkout"
 	"github.com/hivecommons/crux/config"
+	"github.com/hivecommons/crux/gates"
 	"github.com/hivecommons/crux/lanes"
 	"github.com/hivecommons/crux/runs"
 )
@@ -114,6 +115,10 @@ type Server struct {
 	// S7); nil answers those routes with not_supported.
 	Runs *runs.Service
 
+	// Gates, when set, serves the human-gate family (RFC crux#114 S3,
+	// api.PathGates) and relays gate.* events; nil answers those routes 501.
+	Gates *gates.Service
+
 	now     func() time.Time
 	started time.Time
 
@@ -172,6 +177,7 @@ func (s *Server) Handler() http.Handler {
 	s.registerFamilies(mux)
 	s.registerCheckouts(mux)
 	s.registerRuns(mux)
+	s.registerGates(mux)
 	return s.laneHandler(s.authenticate(instrument(mux)))
 }
 

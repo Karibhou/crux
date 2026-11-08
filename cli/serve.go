@@ -11,6 +11,7 @@ import (
 	"github.com/hivecommons/crux/api/callback"
 	"github.com/hivecommons/crux/checkout"
 	"github.com/hivecommons/crux/config"
+	"github.com/hivecommons/crux/gates"
 	"github.com/hivecommons/crux/lanes"
 	"github.com/hivecommons/crux/runs"
 	"github.com/hivecommons/crux/runstate"
@@ -130,6 +131,15 @@ func (e *Env) cmdServe(ctx context.Context, opts globalOptions, args []string) i
 		srv.Checkouts = checkouts
 		runSvc.Checkouts = checkouts
 	}
+	// S3: gates need no configuration; records under <workdir>/gates
+	// outlive the process, so a gate opened before a restart is answerable
+	// after it.
+	gateSvc, err := gates.New(gates.Config{Dir: gates.DefaultDir(opts.workDir)})
+	if err != nil {
+		fmt.Fprintln(e.Stderr, "crux: gates:", err)
+		return ExitError
+	}
+	srv.Gates = gateSvc
 	if hive != nil {
 		hive.install(ctx, rt, srv, e.Stdout)
 		hive.watchPolicy(ctx, rt, e.Stdout, e.Stderr)
