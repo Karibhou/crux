@@ -37,6 +37,11 @@ jobs:
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
           go-version-file: go.mod
+      - name: Install tmux
+        # /v1/health answers 503 without tmux on PATH; ubuntu-latest ships
+        # it, macos-latest does not.
+        if: runner.os == 'macOS'
+        run: brew install tmux
       - name: Module is standalone
         run: |
           set -euo pipefail
@@ -261,6 +266,9 @@ jobs:
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
           go-version-file: go.mod
+      - name: Install tmux
+        if: runner.os == 'macOS'
+        run: brew install tmux
       - name: Build crux
         run: go build -trimpath -ldflags "-X main.version=ci-${GITHUB_SHA::12}" -o crux ./cmd/crux
       - name: Version
